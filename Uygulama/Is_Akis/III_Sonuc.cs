@@ -8,6 +8,7 @@ abstract class Sonuc
 {
     private static Board board;
     private List<Kart> bulunanlar;
+    private Kart bulunan;
 
     static Sonuc()
     {
@@ -33,7 +34,7 @@ abstract class Sonuc
     {
         if (KartVarMi())
         {
-            Kart bulunan = bulunanlar[0];
+            bulunan = bulunanlar[0];
             Console.WriteLine("Bulunan Kart Bilgileri: ");
             Yardimci.Yazdir(Baslik.Yildizlar);
             bulunan.Yazdir();
@@ -129,7 +130,11 @@ abstract class Sonuc
 
     private bool LineSec()
     {
-        Console.WriteLine("Taşımak istediğiniz Line'ı seçiniz: (1) TODO (2) IN PROGRESS (3) DONE");//--
+        bulunan = bulunanlar[0];
+        Console.WriteLine("Taşımak istediğiniz Line'ı seçiniz: (1) TODO (2) IN PROGRESS (3) DONE");
+
+        // Kartı yeni Line içerisine ekleme
+        Yardimci.Yazdir(Baslik.Cizgi);
             switch (Console.ReadLine())
             {
                 case "1":
@@ -144,6 +149,18 @@ abstract class Sonuc
                 default:
                     Yardimci.Yazdir(Baslik.Gecersiz);
                     return false;
+            }
+
+            // Kartı eski Line içerisinden silme
+            int i = -1;
+            foreach (Line _line in board.linelar)
+            {
+                i = _line.kartlar.FindIndex(I => I.baslik == bulunan.baslik);
+                if (i >= 0)
+                {
+                    _line.kartlar.RemoveAt(i); // Eski kart siliniyor.
+                    break;
+                }
             }
             return true;
     }
